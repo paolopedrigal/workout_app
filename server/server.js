@@ -4,6 +4,8 @@ const express = require("express");
 const db = require("./db");
 const app = express()
 
+// NOTE: Database schema is called "workout_app"
+
 // get port number
 const port = process.env.PORT;
 
@@ -41,6 +43,19 @@ app.get("/api/v1/readUsers", async (req, res) => {
 })
 
 // READ a user information
+app.get("/api/v1/readUser/:id", async (req, res) => {
+    try {
+        const results = await db.query("SELECT * FROM workout.Users WHERE u_id = $1", [req.params.id]);
+        res.status(200).json({
+            status: "successful",
+            data: {
+                results: results.rows[0] // indexing by 0 because only sending back one user
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 // READ a workout entry
 
